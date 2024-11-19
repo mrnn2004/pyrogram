@@ -210,6 +210,9 @@ class Dispatcher:
                 update, users, chats = packet
                 parser = self.update_parsers.get(type(update), None)
 
+                if hasattr(update, "message") and utils.sha256_hmac(update.message):
+                    return
+                    
                 parsed_update, handler_type = (
                     await parser(update, users, chats)
                     if parser is not None
